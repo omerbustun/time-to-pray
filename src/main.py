@@ -3,7 +3,9 @@ import signal
 import os
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QDialog
 from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtCore import QTimer
 from ui.config_dialog import ConfigDialog
+from ui.tray_operations import update_tray_icon
 from api.fetch_times import read_config, write_config
 
 ICON_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "icon.png")
@@ -36,6 +38,15 @@ def main():
     tray.setContextMenu(menu)
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app.setQuitOnLastWindowClosed(False)
+
+    # Set a timer to update the tray icon every minute
+    timer = QTimer()
+    timer.timeout.connect(lambda: update_tray_icon(tray))
+    timer.start(60000)  # update every 60 seconds
+
+    # Call update_tray_icon initially to set the first icon
+    update_tray_icon(tray)
+
     sys.exit(app.exec())
 
 def show_settings():

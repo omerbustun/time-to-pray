@@ -1,9 +1,11 @@
 import json
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "config", "settings.json")
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 
 API_URL_MONTHLY = "http://api.aladhan.com/v1/calendarByCity/{year}/{month}"
 
@@ -57,7 +59,10 @@ def fetch_monthly_prayer_times(month, year, country="Turkey", city="Istanbul", m
 
     data = response.json()
     if "data" in data:
-        return [day["timings"] for day in data["data"]]
+        monthly_data = [day["timings"] for day in data["data"]]
+        with open(os.path.join(DATA_DIR, f"prayer_times_{year}_{month}.json"), 'w') as file:
+            json.dump(monthly_data, file, indent=4)
+        return monthly_data
     return None
 
 def validate_location(city, country, method="13"):
@@ -90,14 +95,47 @@ def get_monthly_prayer_times():
     year = current_date.year
 
     # Check if data for the current month is stored locally
-    stored_data = read_config().get(f"{year}-{month}")
-    if not stored_data:
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+
+    file_path = os.path.join(DATA_DIR, f"prayer_times_{year}_{month}.json")
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            stored_data = json.load(file)
+    else:
         # Fetch monthly prayer times if not stored locally
         stored_data = fetch_monthly_prayer_times(month, year, country, city, method)
-        # Save the fetched data to the local config
-        data_to_store = read_config()
-        data_to_store[f"{year}-{month}"] = stored_data
-        write_config(data_to_store)
 
     # Return prayer times for the current day
     return stored_data[current_date.day - 1] if stored_data else None
+
+def get_remaining_time_for_next_prayer(prayer_times):
+    """
+    Returns the remaining time for the next prayer.
+    
+    Args:
+    - prayer_times (dict): Dictionary containing the prayer times for a specific day.
+    
+    Returns:
+    - tuple: (name_of_next_prayer, remaining_time)
+    """
+    now = datetime.now().time()
+    next_prayer = None
+    remaining_time = None
+
+    # List of prayers in order
+    prayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
+    
+    for prayer in prayers:
+        time_str = prayer_times[prayer].split(" ")[0]  # Get only the "04:53" part, ignoring the timezone offset
+        prayer_time = datetime.strptime(time_str, '%H:%M').time()
+        if now < prayer_time:
+            next_prayer = prayer
+            # Calculate remaining time
+            current_time_in_minutes = now.hour * 60 + now.minute
+            prayer_time_in_minutes = prayer_time.hour * 60 + prayer_time.minute
+            remaining_minutes = prayer_time_in_minutes - current_time_in_minutes
+            remaining_time = timedelta(minutes=remaining_minutes)
+            break
+
+    return next_prayer, remaining_time
