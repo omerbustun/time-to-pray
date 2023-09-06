@@ -53,6 +53,6 @@ def update_tray_icon(tray):
         tray.setToolTip(f"Next prayer is {next_prayer} in {tooltip_time_text}")
     else:
         # Handle the case where remaining_time is None, e.g., set the default icon
-        tray.setIcon(ICON_PATH)
+        tray.setIcon(QIcon(ICON_PATH))
         pass
 
