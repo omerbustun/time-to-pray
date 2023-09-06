@@ -3,7 +3,7 @@ import os
 import requests
 from datetime import datetime, timedelta
 
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "config", "settings.json")
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "settings.json")
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 
@@ -117,7 +117,7 @@ def get_remaining_time_for_next_prayer(prayer_times):
     - prayer_times (dict): Dictionary containing the prayer times for a specific day.
     
     Returns:
-    - tuple: (name_of_next_prayer, remaining_time)
+    - tuple: (name_of_next_prayer, remaining_time as timedelta)
     """
     now = datetime.now().time()
     next_prayer = None
@@ -126,7 +126,7 @@ def get_remaining_time_for_next_prayer(prayer_times):
     # List of prayers in order
     prayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
     
-    for prayer in prayers:
+    for idx, prayer in enumerate(prayers):
         time_str = prayer_times[prayer].split(" ")[0]  # Get only the "04:53" part, ignoring the timezone offset
         prayer_time = datetime.strptime(time_str, '%H:%M').time()
         if now < prayer_time:
@@ -138,4 +138,14 @@ def get_remaining_time_for_next_prayer(prayer_times):
             remaining_time = timedelta(minutes=remaining_minutes)
             break
 
+    # If Isha has passed, then we calculate the time until the next day's Fajr
+    if next_prayer is None:
+        next_prayer = "Fajr"
+        time_str = prayer_times[next_prayer].split(" ")[0]  # Get only the "04:53" part, ignoring the timezone offset
+        tomorrow_fajr_time = datetime.combine(datetime.now().date() + timedelta(days=1), 
+                                              datetime.strptime(time_str, '%H:%M').time())
+        now_datetime = datetime.now()
+        remaining_time = tomorrow_fajr_time - now_datetime
+
     return next_prayer, remaining_time
+
