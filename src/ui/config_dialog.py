@@ -1,7 +1,8 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox
 from PyQt6.QtGui import QIcon
-from api.fetch_times import read_config, write_config, validate_location, METHODS
+from api.fetch_times import read_config, write_config, validate_location, fetch_monthly_prayer_times, METHODS
 import os
+from datetime import datetime
 
 ICON_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "assets", "icon.png")
 
@@ -76,7 +77,7 @@ class ConfigDialog(QDialog):
 
         # Fetch the selected method's ID from the dropdown
         method_name = self.method_dropdown.currentText()
-        method_id = METHODS[method_name]  # This will get the ID using the method name as the key
+        method_id = str(METHODS[method_name])  # This will get the ID using the method name as the key
 
         latitude, longitude = validate_location(city, country, method=str(method_id))
         if latitude and longitude:
@@ -91,6 +92,13 @@ class ConfigDialog(QDialog):
                 "longitude": longitude,
                 "method": method_id
             })
+
+            # Fetch the monthly prayer times for the new location and save them
+            current_date = datetime.now()
+            month = current_date.month
+            year = current_date.year
+            fetch_monthly_prayer_times(month, year, country, city, method_id)
+
 
             self.saved_label.setText("Saved!")
         else:
