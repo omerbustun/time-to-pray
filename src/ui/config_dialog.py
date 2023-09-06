@@ -63,6 +63,7 @@ class ConfigDialog(QDialog):
             self.lat_label.setText(f"Longitude: N/A")
         if "method" in config:
             # Find the method name using the method id
+            config["method"] = int(config["method"])  # Convert to integer
             method_name = [name for name, id in METHODS.items() if id == config["method"]][0]
 
             # Set the current index of the dropdown to the index of the method name
@@ -79,7 +80,7 @@ class ConfigDialog(QDialog):
         method_name = self.method_dropdown.currentText()
         method_id = str(METHODS[method_name])  # This will get the ID using the method name as the key
 
-        latitude, longitude = validate_location(city, country, method=str(method_id))
+        latitude, longitude = validate_location(city, country, method=method_id)
         if latitude and longitude:
             self.lat_label.setText(f"Latitude: {latitude}")
             self.lon_label.setText(f"Longitude: {longitude}")
