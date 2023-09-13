@@ -4,9 +4,9 @@ import os
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QDialog
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtCore import QTimer
-from ui.config_dialog import ConfigDialog
-from ui.tray_operations import update_tray_icon
-from api.fetch_times import read_config, write_config
+from .ui.config_dialog import ConfigDialog
+from .ui.tray_operations import update_tray_icon
+from .api.fetch_times import read_config, write_config
 
 ICON_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "icon.png")
 

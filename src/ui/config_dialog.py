@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox
 from PyQt6.QtGui import QIcon
-from api.fetch_times import read_config, write_config, validate_location, fetch_monthly_prayer_times, METHODS
+from ..api.fetch_times import read_config, write_config, validate_location, fetch_monthly_prayer_times, METHODS
 import os
 from datetime import datetime
 

@@ -1,6 +1,6 @@
 from PyQt6.QtGui import QPainter, QPixmap, QFont, QIcon
 from PyQt6.QtCore import Qt
-from api.fetch_times import get_monthly_prayer_times, get_remaining_time_for_next_prayer
+from ..api.fetch_times import get_monthly_prayer_times, get_remaining_time_for_next_prayer
 import os
 
 ICON_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "assets", "icon.png")
