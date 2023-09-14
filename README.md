@@ -14,32 +14,50 @@ Features
 Setup & Installation
 --------------------
 
-1.  **Clone the Repository**
-    
-    ```bash
-    git clone https://github.com/omerbustun/time-to-pray.git
-    ```
-    ```bash
-    cd time-to-pray
-    ```
-    
-2.  **Install Dependencies**
-    
-    Make sure you have Python installed. Then, install the required packages:
-    
-    ```bash
-    pip install -r requirements.txt
-    ```
-    
+**Using pip (Recommended)**
 
-Usage
------
+
+```bash
+pip install time-to-pray
+```
+
+After installation, you can run the application with:
+
+```bash
+time-to-pray
+```
+
+**Manual Installation**
+
+1\.  **Clone the Repository**
+
+```bash
+git clone https://github.com/omerbustun/time-to-pray.git
+```
+```bash
+cd time-to-pray
+```
+
+2\.  **Install Dependencies**
+
+Make sure you have Python installed. Then, install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+3\. **Run**
 
 To run the application:
+
 
 ```bash
 python src/main.py
 ```
+    
+
+Usage
+-----
 
 Once launched, an icon will appear in your system tray. Right-click the icon to access the settings or hover to view the detailed countdown.
 
@@ -52,6 +70,11 @@ The application uses the `settings.json` file for configuration. You can use the
 *   `country`: The country name or code (e.g., "tr" for Turkey).
 *   `latitude` & `longitude`: The geographical coordinates of your location. The application automatically fetches these from the API based on the specified city and country.
 *   `method`: The method used to calculate prayer times.
+
+Acknowledgements
+----------------
+
+This project utilizes the [`Aladhan API`](https://aladhan.com/prayer-times-api) to fetch prayer times. We are grateful to [Aladhan.com](https://aladhan.com/) for providing this valuable service to the community.
 
 Contributing
 ------------
