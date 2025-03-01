@@ -1,10 +1,15 @@
-Time to Pray ![Time to Pray Icon](assets/icon.png)
+<img src="assets/icon.png" width="28" height="21"> Time to Pray 
 ===============
 
 **Time to Pray** is a desktop utility designed to keep you informed about Islamic prayer times. Directly from your system tray, view a real-time countdown to the next prayer. The application proactively retrieves the monthly prayer schedule for your chosen location and caches the data for instantaneous reference. Stay on track with your prayer commitments, knowing the exact time remaining until the next call.
 
+<p align="center">
+<br>
+  <img src="assets/Screanshot.png" alt="Screenshot">
+</p>
+
 Features
---------
+--------------------
 
 *   Real-time countdown to the next prayer, accessible from the system tray.
 *   Proactively fetches the monthly prayer schedule based on your configured location.
